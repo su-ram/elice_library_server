@@ -44,7 +44,9 @@ def login():
 @bp.route('/logout')
 def logout():
 
-    if session['userid']:
+    if 'userid' in session.keys() and session['userid']:
         session.clear()
+    else:
+        return Response(status=400)
 
     return render_template('auth/index.html')

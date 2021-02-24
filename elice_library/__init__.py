@@ -6,17 +6,20 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
+
     app = Flask(__name__)
     app.config.from_pyfile('../config.py')
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from . import auth
+    from . import auth, book
     app.register_blueprint(auth.bp)
+    app.register_blueprint(book.bp)
 
     @app.route('/')
     def hello_world():
         return render_template('auth/index.html')
+
 
 
     return app
