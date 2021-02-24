@@ -1,15 +1,15 @@
 script:
- — apt-get update -qy
- — apt-get install -y python-dev python-pip
- — pip install -r requirements.txt
+    — apt-get update -qy
+    — apt-get install -y python-dev python-pip
+    — pip install -r requirements.txt
 #  — export MONGOHQ_URL=$MONGO_URL
  
 production:
- type: deploy
- script:
- — apt-get update -qy
- — apt-get install -y ruby-dev
- — gem install dpl
- — dpl — provider=heroku — app=task-mgmt-app — api-key=$HEROKU_API_KEY
- only:
- — master
+    type: deploy
+    script:
+        — apt-get update -qy
+        — apt-get install -y ruby-dev
+        — gem install dpl
+        — dpl — provider=heroku — app=task-mgmt-app — api-key=$HEROKU_API_KEY
+    only:
+        - master
