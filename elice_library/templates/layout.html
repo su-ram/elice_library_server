@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.16/dist/css/uikit.min.css" />
     <title>엘리스 도서관</title>
     {% endblock %}
+
+    <nav class="uk-navbar-container" uk-navbar>
+    <div class="uk-navbar-right ">
+        <ul class="uk-navbar-nav ">
+            <li class="uk-active"><a href="">menu1</a></li>
+            <li class="uk-parent"><a href="">menu2</a></li>
+        </ul>
+    </div>
+    </nav>
 </head>
-<body>
-<div>
+<body >
+
+<div class="uk-background-muted">
     {% block content %}{% endblock %}
 </div>
 </body>

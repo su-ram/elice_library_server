@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 db = SQLAlchemy()
-migrate = Migrate()
+migrate = Migrate(compare_type=True)
 
 def create_app():
 
@@ -19,7 +19,5 @@ def create_app():
     @app.route('/')
     def hello_world():
         return render_template('auth/index.html')
-
-
 
     return app

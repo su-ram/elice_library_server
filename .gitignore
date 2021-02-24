@@ -1,6 +1,7 @@
 
 # Created by https://www.toptal.com/developers/gitignore/api/flask,pycharm,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=flask,pycharm,windows
+*.zip
 
 ### Flask ###
 instance/*
@@ -8,7 +9,8 @@ instance/*
 .webassets-cache
 migrations/*
 .idea
-
+*.png
+*.jpg
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
