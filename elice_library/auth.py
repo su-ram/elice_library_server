@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, session, Response
 from .models import User
 from . import db
 
@@ -13,8 +13,12 @@ def signup():
         email = request.form['email']
         password = request.form['password']
 
-        user = User(name=name, email=email, password=password)
+        duplicate = User.query.filter_by(email=email).first()
 
+        if duplicate is not None:
+            return Response(status=409)
+
+        user = User(name=name, email=email, password=password)
         db.session.add(user)
         db.session.commit()
 
@@ -24,8 +28,23 @@ def signup():
 def login():
 
     if request.method == 'POST':
+
         email = request.form['email']
-        users =  User.query.all()
-        print(users)
+        password = request.form['password']
+        users =  User.query.filter_by(email=email).first()
+
+        if users.password != password:
+            return Response(status=403)
+
+        if users is not None:
+            session['userid'] = users.id
+
+    return render_template('auth/index.html')
+
+@bp.route('/logout')
+def logout():
+
+    if session['userid']:
+        session.clear()
 
     return render_template('auth/index.html')
