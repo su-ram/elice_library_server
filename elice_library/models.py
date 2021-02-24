@@ -24,8 +24,9 @@ class Book(db.Model):
     link = db.Column(db.String(200))
     rating = db.Column(db.Integer)
     isbn = db.Column(db.BIGINT)
+    quantity = db.Column(db.Integer)
 
-    def __init__(self, book_name, publisher, author, publication_date, pages, description, link, rating, isbn):
+    def __init__(self, book_name, publisher, author, publication_date, pages, description, link, rating, isbn, quantity):
         self.book_name = book_name
         self.publisher = publisher
         self.author = author
@@ -35,5 +36,5 @@ class Book(db.Model):
         self.link = link
         self.rating = rating
         self.isbn = isbn
-
+        self.quantity = quantity
 

@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
+    <h3 class="uk-card-title">{{ book.book_name }}</h3>
+
+    <p><span class="uk-label">저자</span> {{ book.author }}</p>
+    <p><span class="uk-label">쪽수</span> {{ book.pages }}</p>
+    <p><span class="uk-label">출판사</span> {{ book.publisher }}</p>
+    </div>
+{% endblock %}
