@@ -6,7 +6,7 @@ from .models import Book
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
-@bp.route('/init2834283479283479283710')
+@bp.route('/init')
 def initBook():
     f = open('C:\\Users\\swamy\\OneDrive\\Desktop\\elice\\elice_library\\elice_library\\booklist.csv', encoding='UTF8')
     rdr = csv.reader(f)
@@ -42,7 +42,14 @@ def getAllBook():
         temp['isbn'] = book.isbn
         temp['publisher'] = book.publisher
         temp['description'] = book.description
+        temp['quantity'] = book.quantity
         data.append(temp)
 
-    return render_template('book/booklist.html', books=data)
+    return render_template('book/main.html', books=data)
 
+@bp.route('/<bookid>')
+def getBook(bookid):
+
+    book = Book.query.get(bookid)
+
+    return render_template('book/info.html', book=book)

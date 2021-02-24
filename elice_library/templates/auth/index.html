@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>login</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
 <h4>로그인</h4>
 <form action="/login" method="post">
-    <input type="text" name="email" placeholder="이메일"/>
-    <input type="password" name="password" placeholder="비밀번호"/>
-    <input type="submit" value="로그인" />
+    <input class="uk-input uk-form-width-medium" type="text" name="email" placeholder="이메일"/>
+    <input class="uk-input uk-form-width-medium" type="password" name="password" placeholder="비밀번호"/>
+    <input class="uk-button uk-button-primary" type="submit" value="로그인" />
 </form>
 
-<button href="/signup">회원가입</button>
-</body>
-</html>
+<button onClick="location.href='signup'" class="uk-button uk-button-primary">회원가입</button>
+{% endblock %}
+
+
