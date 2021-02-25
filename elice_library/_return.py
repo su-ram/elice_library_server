@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, request, session, render_template
 from . import db
-from .models import Book, Rental, BookRental
+from .models import Book, Rental
 from datetime import date
 
 bp = Blueprint("_return", __name__)
@@ -28,7 +28,6 @@ def return_book():
         db.session.commit()
 
     books = []
-    # rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date==None).all()
 
     data = db.session.query(Rental.rental_date, Book.book_name, Book.image_path, Rental.id, Book.id).filter(Rental.bookid == Book.id, Rental.userid == userid, Rental.return_date == None).all()
 

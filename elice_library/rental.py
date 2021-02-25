@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, session
+from flask import Blueprint, redirect, request, session, url_for
 from elice_library import db
 from .models import Book, Rental
 
@@ -17,4 +17,4 @@ def rentalBook():
         db.session.add(new_rental)
         db.session.commit()
 
-    return redirect('/book')
+    return redirect(url_for('book.getAllBook'))

@@ -1,15 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-
+{% if message %}
+    <script type="text/javascript">alert("{{ message }}");</script>
+{% endif %}
     <div uk-grid>
 {% for book in books %}
 
     <div>
         <div class="uk-card uk-card-default uk-card-body">
+
             <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
             <a class="uk-link-text" href="{{ book.id }}">{{ book.book_name }}</a>
             <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
-
 
             <p style="alignment: right">{{ book.quantity }}권 남음</p>
             <form action="/rental" method="post">

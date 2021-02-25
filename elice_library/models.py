@@ -66,13 +66,3 @@ class Rental(db.Model):
 
         self.userid = userid
         self.bookid = bookid
-
-class BookRental(Book):
-
-    rental_date = None
-
-    def __init__(self, rental_date):
-
-        super()
-        self.rental_date = rental_date
-

@@ -1,6 +1,6 @@
 import csv
 import random
-from flask import Blueprint, render_template, Response, jsonify
+from flask import Blueprint, render_template, Response, request
 from elice_library import db
 from .models import Book
 from datetime import date, datetime
@@ -83,7 +83,9 @@ def getAllBook():
         temp['image_path'] = book.image_path
         data.append(temp)
 
-    return render_template('book/main.html', books=data)
+    message = request.values.get("message")
+
+    return render_template('book/main.html', books=data, message=message)
 
 @bp.route('/<bookid>')
 def getBook(bookid):

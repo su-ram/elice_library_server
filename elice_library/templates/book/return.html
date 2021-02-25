@@ -6,7 +6,7 @@
     <div>
         <div class="uk-card uk-card-default uk-card-body">
             <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
-            <p><a class="uk-link-text" href="{{ book.id }}">{{ book.book_name }}</a></p>
+            <p><a class="uk-link-text" href="/book/{{ book.bookid }}">{{ book.book_name }}</a></p>
             <p class="uk-label">대여날짜 : {{ book.rental_date }}</p>
             <form action="/return" method="post">
                 <input hidden type="number" name="rentalid" value="{{ book.rentalid }}"/>
