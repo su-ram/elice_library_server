@@ -12,9 +12,12 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from . import auth, book
+    from . import auth, book, rental, _return
+
     app.register_blueprint(auth.bp)
     app.register_blueprint(book.bp)
+    app.register_blueprint(rental.bp)
+    app.register_blueprint(_return.bp)
 
     @app.route('/')
     def hello_world():

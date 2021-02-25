@@ -1,8 +1,8 @@
-from flask import Blueprint, request, render_template, session, Response
+from flask import Blueprint, request, render_template, session, Response, redirect
 from .models import User
 from . import db
 
-bp = Blueprint("auth", __name__, url_prefix="/")
+bp = Blueprint("auth", __name__)
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
@@ -38,6 +38,7 @@ def login():
 
         if users is not None:
             session['isLogin'] = users.id
+            return redirect('/book')
 
     return render_template('auth/index.html')
 

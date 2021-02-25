@@ -1,4 +1,5 @@
 from elice_library import db
+from datetime import datetime
 
 class User(db.Model):
 
@@ -52,4 +53,26 @@ class Book(db.Model):
         self.isbn = isbn
         self.quantity = quantity
         self.image_path = image_path
+
+class Rental(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.ForeignKey("user.id"))
+    bookid = db.Column(db.ForeignKey("book.id"))
+    rental_date = db.Column(db.Date, nullable=False, default=datetime.today().date())
+    return_date = db.Column(db.Date, nullable=True, default=None)
+
+    def __init__(self, userid, bookid):
+
+        self.userid = userid
+        self.bookid = bookid
+
+class BookRental(Book):
+
+    rental_date = None
+
+    def __init__(self, rental_date):
+
+        super()
+        self.rental_date = rental_date
 
