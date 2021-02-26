@@ -71,7 +71,10 @@ class Rental(db.Model):
 class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
     userid = db.Column(db.Integer, db.ForeignKey("user.id"))
-    rentalid = db.Column(db.Integer, db.ForeignKey("rental.id"))
+    user = db.relationship('User')
     content = db.Column(db.TEXT)
+    rating = db.Column(db.Integer)
     create_date = db.Column(db.DateTime, default=datetime.today())
+

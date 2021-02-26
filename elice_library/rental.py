@@ -9,7 +9,7 @@ def rentalBook():
 
     bookid = request.form.get("bookid")
     book = Book.query.filter(Book.id == bookid).first()
-    userid = session['isLogin']
+    userid = session['userid']
 
     if book.quantity > 0:
         new_rental = Rental(userid = userid, bookid=bookid)
@@ -23,14 +23,14 @@ def rentalBook():
 @bp.before_request
 def login_check():
 
-    if 'isLogin' not in session.keys():
+    if 'userid' not in session.keys():
         return redirect('/')
 
 
 @bp.route('/return', methods=('GET', 'POST'))
 def return_book():
 
-    userid = session['isLogin']
+    userid = session['userid']
 
     if request.method == 'POST':
 

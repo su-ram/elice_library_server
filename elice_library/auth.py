@@ -37,7 +37,7 @@ def login():
             return Response(status=403)
 
         if users is not None:
-            session['isLogin'] = users.id
+            session['userid'] = users.id
             return redirect('/book')
 
     return render_template('auth/index.html')
@@ -45,7 +45,7 @@ def login():
 @bp.route('/logout')
 def logout():
 
-    if 'isLogin' in session.keys() and session['isLogin']:
+    if 'userid' in session.keys() and session['userid']:
         session.clear()
     else:
         return Response(status=400)
