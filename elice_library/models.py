@@ -57,8 +57,9 @@ class Book(db.Model):
 class Rental(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    userid = db.Column(db.ForeignKey("user.id"))
-    bookid = db.Column(db.ForeignKey("book.id"))
+    userid = db.Column(db.Integer, db.ForeignKey("user.id"))
+    bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
+    book = db.relationship('Book')
     rental_date = db.Column(db.Date, nullable=False, default=datetime.today().date())
     return_date = db.Column(db.Date, nullable=True, default=None)
 
@@ -66,3 +67,11 @@ class Rental(db.Model):
 
         self.userid = userid
         self.bookid = bookid
+
+class Comment(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userid = db.Column(db.Integer, db.ForeignKey("user.id"))
+    rentalid = db.Column(db.Integer, db.ForeignKey("rental.id"))
+    content = db.Column(db.TEXT)
+    create_date = db.Column(db.DateTime, default=datetime.today())
