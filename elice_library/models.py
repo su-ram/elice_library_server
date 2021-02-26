@@ -8,10 +8,6 @@ class User(db.Model):
     email = db.Column(db.String(30), primary_key=True)
     password = db.Column(db.String(30))
 
-    def __init__(self, name, email, password):
-        self.email = email
-        self.name = name
-        self.password = password
 
 class Book(db.Model):
 
@@ -28,31 +24,6 @@ class Book(db.Model):
     quantity = db.Column(db.Integer)
     image_path = db.Column(db.String(50))
 
-    def __init__(self,
-                 book_name,
-                 publisher,
-                 author,
-                 publication_date,
-                 pages,
-                 description,
-                 link,
-                 rating,
-                 isbn,
-                 quantity,
-                 image_path):
-
-
-        self.book_name = book_name
-        self.publisher = publisher
-        self.author = author
-        self.publication_date = publication_date
-        self.pages = pages
-        self.description = description
-        self.link = link
-        self.rating = rating
-        self.isbn = isbn
-        self.quantity = quantity
-        self.image_path = image_path
 
 class Rental(db.Model):
 
@@ -63,10 +34,6 @@ class Rental(db.Model):
     rental_date = db.Column(db.Date, nullable=False, default=datetime.today().date())
     return_date = db.Column(db.Date, nullable=True, default=None)
 
-    def __init__(self, userid, bookid):
-
-        self.userid = userid
-        self.bookid = bookid
 
 class Comment(db.Model):
 

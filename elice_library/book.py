@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, Response, session, request, redire
 from elice_library import db
 from .models import Book, Comment
 from datetime import datetime
+from sqlalchemy import func
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -83,9 +84,22 @@ def create_comment(bookid):
     if request.method == "POST":
 
         content = request.form['content']
-        rating = request.form['rating']
+        rating = request.values.get('rating')
         comment = Comment(userid=userid, content=content, bookid=bookid, rating = rating)
         db.session.add(comment)
+        db.session.commit()
+
+        total, count = db.session\
+            .query(func.sum(Comment.rating), func.count(Comment.rating))\
+            .filter(Comment.rating != None)\
+            .group_by(Comment.bookid)\
+            .having( Comment.bookid==bookid)\
+            .first()
+
+        new_rating = total / count
+        book = Book.query.get(bookid)
+        book.rating = new_rating
+
         db.session.commit()
 
     return redirect(url_for('book.getBook',bookid=bookid))

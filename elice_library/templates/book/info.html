@@ -19,7 +19,13 @@
         <h3>댓글</h3>
         <dl class="uk-description-list uk-description-list-divider">
         {% for comment in comments %}
-            <dt>{{ comment.user.name }}  <span class="uk-label">{{ comment.rating }}점</span></dt>
+            <dt>{{ comment.user.name }}
+
+                {% if comment.rating %}
+                <span class="uk-label">{{ comment.rating }}점</span>
+                {% endif %}
+
+            </dt>
             <dd><p>{{ comment.content}} {{ comment.create_date }}</p>
             </dd>
 
@@ -29,7 +35,7 @@
     <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="post">
 
          <div class="uk-margin">
-            <textarea class="uk-textarea" name="content" rows="5"></textarea>
+            <textarea class="uk-textarea" name="content" rows="3"></textarea>
         </div>
         <h4>평점</h4>
         <div class="uk-form-controls">
