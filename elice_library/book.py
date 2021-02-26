@@ -89,16 +89,18 @@ def create_comment(bookid):
         db.session.add(comment)
         db.session.commit()
 
-        total, count = db.session\
-            .query(func.sum(Comment.rating), func.count(Comment.rating))\
-            .filter(Comment.rating != None)\
-            .group_by(Comment.bookid)\
-            .having( Comment.bookid==bookid)\
-            .first()
+        # 평균 계산
+        ratings = Comment.query.filter(Comment.bookid == bookid, Comment.rating != None).all()
 
-        new_rating = total / count
+        sum_rating = 0
+        num_ratings = len(ratings)
+
+        for rating in ratings:
+            sum_rating += rating.rating
+
+        avg_rating = round(sum_rating / num_ratings)
         book = Book.query.get(bookid)
-        book.rating = new_rating
+        book.rating = avg_rating
 
         db.session.commit()
 
