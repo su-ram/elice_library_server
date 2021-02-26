@@ -45,3 +45,11 @@ def return_book():
     rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date == None).all()
 
     return render_template('book/return.html', rentals = rentals)
+
+@bp.route('/log')
+def rental_log():
+
+    userid = session['userid']
+    rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date).all()
+
+    return render_template('book/rental_log.html', rentals = rentals)
