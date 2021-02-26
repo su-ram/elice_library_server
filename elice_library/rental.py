@@ -42,19 +42,6 @@ def return_book():
         book.quantity += 1
         db.session.commit()
 
-    books = []
+    rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date == None).all()
 
-    data = db.session.query(Rental.rental_date, Book.book_name, Book.image_path, Rental.id, Book.id).filter(Rental.bookid == Book.id, Rental.userid == userid, Rental.return_date == None).all()
-
-    for d in data:
-
-        temp = {}
-        temp['rental_date'] = d[0]
-        temp['book_name'] = d[1]
-        temp['image_path'] = d[2]
-        temp['rentalid'] = d[3]
-        temp['bookid'] = d[4]
-
-        books.append(temp)
-
-    return render_template('book/return.html', books = books)
+    return render_template('book/return.html', rentals = rentals)

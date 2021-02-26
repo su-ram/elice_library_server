@@ -1,23 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
 <div uk-grid>
-{% for book in books %}
-
+{% for rental in rentals %}
+{% with book=rental.book %}
     <div>
         <div class="uk-card uk-card-default uk-card-body">
-            <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
-            <p><a class="uk-link-text" href="/book/{{ book.bookid }}">{{ book.book_name }}</a></p>
-            <p class="uk-label">대여날짜 : {{ book.rental_date }}</p>
+            <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" alt="" uk-img ></p>
+            <p><a class="uk-link-text" href="/book/{{ book.id }}">{{ book.book_name }}</a></p>
+            <p class="uk-label">대여날짜 : {{ rental.rental_date }}</p>
             <form action="/return" method="post">
-                <input hidden type="number" name="rentalid" value="{{ book.rentalid }}"/>
+                <input hidden type="number" name="rentalid" value="{{ rental.id }}"/>
                 <input class="uk-button uk-button-secondary uk-width-1-1" type = "submit" value="반납하기"></form>
             </form>
-
-
-
         </div>
     </div>
-
+{% endwith %}
 {% endfor%}
 </div>
 {% endblock %}
