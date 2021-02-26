@@ -19,8 +19,13 @@ def signup():
             return Response(status=409)
 
         user = User(name=name, email=email, password=password)
+
         db.session.add(user)
+        db.session.flush()
+        session['userid'] = user.id
         db.session.commit()
+
+        return redirect('/book')
 
     return render_template('auth/signup.html')
 
@@ -31,13 +36,13 @@ def login():
 
         email = request.form['email']
         password = request.form['password']
-        users =  User.query.filter_by(email=email).first()
+        user =  User.query.filter_by(email=email).first()
 
-        if users.password != password:
+        if user.password != password:
             return Response(status=403)
 
-        if users is not None:
-            session['isLogin'] = users.id
+        if user is not None:
+            session['userid'] = user.id
             return redirect('/book')
 
     return render_template('auth/index.html')
@@ -45,7 +50,7 @@ def login():
 @bp.route('/logout')
 def logout():
 
-    if 'isLogin' in session.keys() and session['isLogin']:
+    if 'userid' in session.keys() and session['userid']:
         session.clear()
     else:
         return Response(status=400)
