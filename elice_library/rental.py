@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, session, url_for, render_template
+from flask import Blueprint, redirect, request, session, url_for, render_template, flash
 from elice_library import db
 from .models import Book, Rental
 from datetime import date
@@ -11,8 +11,11 @@ def rentalBook():
     book = Book.query.filter(Book.id == bookid).first()
     userid = session['userid']
 
-    if book.quantity > 0:
-        new_rental = Rental(userid = userid, bookid=bookid)
+    if book.quantity < 1:
+        flash("모든 책이 대출되었습니다.", category="error")
+
+    else:
+        new_rental = Rental(userid=userid, bookid=bookid)
         book.quantity -= 1
         db.session.add(new_rental)
         db.session.commit()
@@ -45,3 +48,12 @@ def return_book():
     rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date == None).all()
 
     return render_template('book/return.html', rentals = rentals)
+
+@bp.route('/log')
+def rental_log():
+
+    userid = session['userid']
+    rentals = Rental.query.filter(Rental.userid == userid).all()
+
+
+    return render_template('book/rental_log.html', rentals = rentals)

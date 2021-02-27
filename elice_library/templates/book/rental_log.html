@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div uk-grid>
+{% for rental in rentals %}
+{% with book=rental.book%}
+    <div>
+        <div class="uk-card uk-card-default uk-card-body">
+
+            <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
+            <a class="uk-link-text" href="{{ url_for('book.getBook', bookid=book.id) }}">{{ book.book_name }}</a>
+            <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
+            <p><span class="uk-label">대출일</span> {{ rental.rental_date }}</p>
+
+            <p><span class="uk-label">반납일</span> {{ rental.return_date }}</p>
+
+
+        </div>
+    </div>
+{% endwith %}
+{% endfor%}
+</div>
+
+{% endblock %}

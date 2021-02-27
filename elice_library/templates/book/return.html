@@ -1,18 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-<div uk-grid>
+<div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
 {% for rental in rentals %}
 {% with book=rental.book %}
     <div>
-        <div class="uk-card uk-card-default uk-card-body">
-            <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" alt="" uk-img ></p>
+        <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
+            <div class="uk-card-media-top">
+                <img class="uk-border-rounded" src="{{ book.image_path }}" uk-img >
+            </div>
             <p><a class="uk-link-text" href="/book/{{ book.id }}">{{ book.book_name }}</a></p>
             <p class="uk-label">대여날짜 : {{ rental.rental_date }}</p>
-            <form action="/return" method="post">
+
+        </div>
+        <form action="/return" method="post">
                 <input hidden type="number" name="rentalid" value="{{ rental.id }}"/>
                 <input class="uk-button uk-button-secondary uk-width-1-1" type = "submit" value="반납하기"></form>
-            </form>
-        </div>
+        </form>
     </div>
 {% endwith %}
 {% endfor%}

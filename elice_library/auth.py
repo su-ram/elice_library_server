@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, session, Response, redirect
+from flask import Blueprint, request, render_template, session, flash, redirect
 from .models import User
 from . import db
 
@@ -16,7 +16,7 @@ def signup():
         duplicate = User.query.filter_by(email=email).first()
 
         if duplicate is not None:
-            return Response(status=409)
+            return render_template('auth/index.html'), 409
 
         user = User(name=name, email=email, password=password)
 
@@ -38,21 +38,23 @@ def login():
         password = request.form['password']
         user =  User.query.filter_by(email=email).first()
 
+        status_code = 200
+
         if user.password != password:
-            return Response(status=403)
+            status_code = 403
+            return render_template('auth/index.html'), 403
 
         if user is not None:
             session['userid'] = user.id
+            flash("성공적으로 로그인되었습니다.", category="success")
             return redirect('/book')
 
-    return render_template('auth/index.html')
+    return render_template('auth/index.html'), status_code
 
 @bp.route('/logout')
 def logout():
 
     if 'userid' in session.keys() and session['userid']:
         session.clear()
-    else:
-        return Response(status=400)
 
     return render_template('auth/index.html')
