@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, session, Response, redirect
+from flask import Blueprint, request, render_template, session, flash, redirect
 from .models import User
 from . import db
 
@@ -46,6 +46,7 @@ def login():
 
         if user is not None:
             session['userid'] = user.id
+            flash("성공적으로 로그인되었습니다.", category="success")
             return redirect('/book')
 
     return render_template('auth/index.html'), status_code
