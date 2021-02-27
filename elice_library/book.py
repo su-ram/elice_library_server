@@ -4,27 +4,11 @@ from flask import Blueprint, render_template, Response, session, request, redire
 from elice_library import db
 from .models import Book, Comment
 from datetime import datetime
-from sqlalchemy import func
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
 @bp.route('/init')
 def initBook():
-
-
-    # f = open('C:\\Users\\swamy\\OneDrive\\Desktop\\elice\\elice_library\\elice_library\\booklist.csv', encoding='UTF8')
-    # rdr = csv.reader(f)
-    #
-    # for line in rdr:
-    #     if line[0] == ' ':continue
-    #     rate = random.randrange(6)
-    #
-    #     book = Book(book_name=line[1], publisher=line[2], author=line[3], publication_date=line[4], pages=line[5],
-    #                 description=line[7], link=line[8], rating=rate, isbn=line[6])
-    #     db.session.add(book)
-    #     db.session.commit()
-    #
-    # f.close()
 
     with open('C:\\Users\\swamy\\OneDrive\\Desktop\\elice\\elice_library\\elice_library\\booklist.csv', 'r', encoding='UTF8') as f:
         reader = csv.DictReader(f)
@@ -74,6 +58,7 @@ def getBook(bookid):
 
     book = Book.query.get(bookid)
     comments = Comment.query.filter(Comment.bookid == bookid).order_by(Comment.create_date.desc()).all()
+
     return render_template('book/info.html', book=book, comments=comments)
 
 @bp.route('/<int:bookid>/comment', methods=["POST"])
@@ -89,7 +74,6 @@ def create_comment(bookid):
         db.session.add(comment)
         db.session.commit()
 
-        # 평균 계산
         ratings = Comment.query.filter(Comment.bookid == bookid, Comment.rating != None).all()
 
         sum_rating = 0

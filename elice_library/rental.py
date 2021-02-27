@@ -55,5 +55,4 @@ def rental_log():
     userid = session['userid']
     rentals = Rental.query.filter(Rental.userid == userid).all()
 
-
     return render_template('book/rental_log.html', rentals = rentals)
