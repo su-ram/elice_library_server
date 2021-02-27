@@ -1,54 +1,94 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
+    <div class="uk-card uk-card-default uk-card-large uk-card-body">
+    <div class="uk-column-1-2 uk-padding">
+         <img src = "{{book.image_path}}" style="width: auto"/>
+        <h1 class="uk-heading-small">{{ book.book_name }}</h1>
+        <table class="uk-table uk-table-hover uk-table-divider">
+        <tbody>
+            <tr>
+                <td>저자</td>
+                <td>{{ book.author }}</td>
 
-        <img src = "{{book.image_path}}" style="width: auto"/>
-    <h3 class="uk-card-title">{{ book.book_name }}</h3>
+            </tr>
+            <tr>
+                <td>쪽수</td>
+                <td>{{ book.pages }}</td>
 
-    <p><span class="uk-label">저자</span> {{ book.author }}</p>
-    <p><span class="uk-label">쪽수</span> {{ book.pages }}</p>
-    <p><span class="uk-label">출판사</span> {{ book.publisher }}</p>
-    <p><span class="uk-label">출간일</span> {{ book.publication_date }}</p>
-    <p><span class="uk-label">ISBN</span> {{ book.isbn }}</p>
+            </tr>
+            <tr>
+                <td>출판사</td>
+                <td>{{ book.publisher }}</td>
+            </tr>
+        <tr>
+                <td>출간일</td>
+                <td>{{ book.publication_date }}</td>
+            </tr>
+        <tr>
+                <td>ISBN</td>
+                <td>{{ book.isbn }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
 
-    <div>
+    <div class="uk-placeholder uk-text-emphasis">
         {{ book.description }}
     </div>
 
-
-        <h3>댓글</h3>
-        <dl class="uk-description-list uk-description-list-divider">
+    <div class="uk-padding-large">
+        <ul uk-accordion="multiple: true">
+    <li>
+        <a class="uk-accordion-title" href="#"><h3>댓글</h3></a>
+        <div class="uk-accordion-content uk-margin-large-left uk-margin-large-right">
+            <dl class="uk-description-list uk-description-list-divider">
         {% for comment in comments %}
             <dt>{{ comment.user.name }}
-
                 {% if comment.rating %}
                 <span class="uk-label">{{ comment.rating }}점</span>
                 {% endif %}
-
             </dt>
             <dd><p>{{ comment.content}} {{ comment.create_date }}</p>
             </dd>
-
         {% endfor %}
         </dl>
-    <h3>댓글 달기</h3>
-    <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="post">
+
+        </div>
+    </li>
+    <li>
+        <a class="uk-accordion-title" href="#"><h3>댓글달기</h3></a>
+        <div class="uk-accordion-content uk-margin-large-left uk-margin-large-right">
+            <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="post">
 
          <div class="uk-margin">
             <textarea class="uk-textarea" name="content" rows="3"></textarea>
         </div>
-        <h4>평점</h4>
-        <div class="uk-form-controls">
-            <label><input class="uk-radio" type="radio" name="rating" value="1"> 1</label><br>
-            <label><input class="uk-radio" type="radio" name="rating" value="2"> 2</label><br>
-            <label><input class="uk-radio" type="radio" name="rating" value="3"> 3</label><br>
-            <label><input class="uk-radio" type="radio" name="rating" value="4"> 4</label><br>
-            <label><input class="uk-radio" type="radio" name="rating" value="5"> 5</label><br>
+
+        <div class="uk-column-1-4">
+            <div><h4>평점</h4></div>
+            <div class="uk-form-controls">
+                <label><input class="uk-radio" type="radio" name="rating" value="1"> 1</label>
+                <label><input class="uk-radio" type="radio" name="rating" value="2"> 2</label>
+                <label><input class="uk-radio" type="radio" name="rating" value="3"> 3</label>
+                <label><input class="uk-radio" type="radio" name="rating" value="4"> 4</label>
+                <label><input class="uk-radio" type="radio" name="rating" value="5"> 5</label>
+            </div>
+            <div class="uk-margin">
+                <input class="uk-button uk-button-primary" type="submit" value="댓글 작성"/>
+            </div>
         </div>
-        <div class="uk-margin">
-            <input class="uk-button uk-button-primary" type="submit" value="댓글 작성"/>
-        </div>
+
+
+
+
+
     </form>
+        </div>
+    </li>
+</ul>
+    </div>
+
+
     </div>
 
 

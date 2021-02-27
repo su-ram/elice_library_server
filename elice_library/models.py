@@ -19,7 +19,7 @@ class Book(db.Model):
     pages = db.Column(db.Integer)
     description = db.Column(db.TEXT)
     link = db.Column(db.String(200))
-    rating = db.Column(db.FLOAT)
+    rating = db.Column(db.Integer)
     isbn = db.Column(db.BIGINT)
     quantity = db.Column(db.Integer)
     image_path = db.Column(db.String(50))

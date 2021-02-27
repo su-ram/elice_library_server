@@ -1,24 +1,27 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div uk-grid>
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+    {% if messages %}
+    <script type="text/javascript">UIkit.notification({message: '{{messages[0]}}', pos: 'top-center', status: 'success'})</script>
+    {% endif %}
+{% endwith %}
+    <div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
 {% for book in books %}
 
     <div>
-        <div class="uk-card uk-card-default uk-card-body">
-
-            <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
+        <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
+            <div class="uk-card-media-top">
+                <img class="uk-border-rounded" src="{{ book.image_path }}" uk-img >
+            </div>
             <a class="uk-link-text" href="{{ book.id }}">{{ book.book_name }}</a>
             <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
-
             <p style="alignment: right">{{ book.quantity }}권 남음</p>
-            <form action="/rental" method="post">
+
+        </div>
+        <form action="/rental" method="post">
                 <input hidden type="number" name="bookid" value="{{ book.id }}"/>
                 <input class="uk-button uk-button-secondary uk-width-1-1" type = "submit" value="대여하기"></form>
             </form>
-
-
-
-        </div>
     </div>
 
 {% endfor%}
