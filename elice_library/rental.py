@@ -53,6 +53,6 @@ def return_book():
 def rental_log():
 
     userid = session['userid']
-    rentals = Rental.query.filter(Rental.userid == userid).all()
+    rentals = Rental.query.filter(Rental.userid == userid).order_by(Rental.rental_date.desc()).all()
 
     return render_template('book/rental_log.html', rentals = rentals)
