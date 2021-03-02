@@ -1,21 +1,46 @@
 {% extends "layout.html" %}
 {% block content %}
     <h4>회원가입</h4>
-<form action="/signup" method="post">
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="text" name="name" placeholder="이름"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="text" name="email" placeholder="이메일"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="password" name="password" placeholder="비밀번호"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="password" name="validation" placeholder="비밀번호 확인"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-button uk-button-primary" type="submit" value="회원가입" />
-    </div>
+{#<form action="/signup" method="post">#}
+{#    <div class="uk-form-controls uk-margin">#}
+{#        <input class="uk-input uk-form-width-medium" type="text" name="name" placeholder="이름"/>#}
+{#    </div>#}
+{#    <div class="uk-form-controls uk-margin">#}
+{#        <input class="uk-input uk-form-width-medium" type="text" name="email" placeholder="이메일"/>#}
+{#    </div>#}
+{#    <div class="uk-form-controls uk-margin">#}
+{#        <input class="uk-input uk-form-width-medium" type="password" name="password" placeholder="비밀번호"/>#}
+{#    </div>#}
+{#    <div class="uk-form-controls uk-margin">#}
+{#        <input class="uk-input uk-form-width-medium" type="password" name="validation" placeholder="비밀번호 확인"/>#}
+{#    </div>#}
+{#    <div class="uk-form-controls uk-margin">#}
+{#        <input class="uk-button uk-button-primary" type="submit" value="회원가입" />#}
+{#    </div>#}
+{#</form>#}
+
+<form method="POST", action="{{ url_for('auth.signup') }}">
+
+    <fieldset class="uk-fieldset">
+    {{ form.username.label }}
+    {{ (form.username) }}
+        {% if form.username.errors %}
+        <ul class="errors">
+          {% for error in form.username.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+
+    {{ (form.email) }}
+    {{ (form.password) }}
+    {{ (form.confirm) }}
+    {{ form.submit }}
+
 </form>
+
+
+
 {% endblock %}
