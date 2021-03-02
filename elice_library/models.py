@@ -22,7 +22,7 @@ class Book(db.Model):
     rating = db.Column(db.Integer)
     isbn = db.Column(db.BIGINT)
     quantity = db.Column(db.Integer)
-    image_path = db.Column(db.String(50))
+    image_path = db.Column(db.String(100))
 
 
 class Rental(db.Model):

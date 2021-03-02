@@ -1,24 +1,21 @@
 from flask import Blueprint, request, render_template, session, flash, redirect
 from .models import User
 from . import db
+from .register_form import RegistrationForm
 
 bp = Blueprint("auth", __name__)
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
 
-    if request.method == 'POST':
-
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-
-        duplicate = User.query.filter_by(email=email).first()
+        duplicate = User.query.filter_by(email=form.email).first()
 
         if duplicate is not None:
             return render_template('auth/index.html'), 409
 
-        user = User(name=name, email=email, password=password)
+        user = User(name=form.name, email=form.email, password=form.password)
 
         db.session.add(user)
         db.session.flush()
@@ -27,10 +24,11 @@ def signup():
 
         return redirect('/book')
 
-    return render_template('auth/signup.html')
+    return render_template('auth/signup.html', form=form)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+
 
     if request.method == 'POST':
 
