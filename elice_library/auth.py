@@ -7,20 +7,21 @@ bp = Blueprint("auth", __name__)
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
-    form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
 
-        duplicate = User.query.filter_by(email=form.email).first()
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+
+        duplicate = User.query.filter_by(email=form.email.data).first()
 
         if duplicate is not None:
             return render_template('auth/index.html'), 409
 
-        user = User(name=form.name, email=form.email, password=form.password)
+        user = User(name=form.username.data, email=form.email.data, password=form.password.data)
 
         db.session.add(user)
-        db.session.flush()
-        session['userid'] = user.id
         db.session.commit()
+        session['userid'] = user.id
 
         return redirect('/book')
 

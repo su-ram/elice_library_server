@@ -1,26 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
     <h4>회원가입</h4>
-{#<form action="/signup" method="post">#}
-{#    <div class="uk-form-controls uk-margin">#}
-{#        <input class="uk-input uk-form-width-medium" type="text" name="name" placeholder="이름"/>#}
-{#    </div>#}
-{#    <div class="uk-form-controls uk-margin">#}
-{#        <input class="uk-input uk-form-width-medium" type="text" name="email" placeholder="이메일"/>#}
-{#    </div>#}
-{#    <div class="uk-form-controls uk-margin">#}
-{#        <input class="uk-input uk-form-width-medium" type="password" name="password" placeholder="비밀번호"/>#}
-{#    </div>#}
-{#    <div class="uk-form-controls uk-margin">#}
-{#        <input class="uk-input uk-form-width-medium" type="password" name="validation" placeholder="비밀번호 확인"/>#}
-{#    </div>#}
-{#    <div class="uk-form-controls uk-margin">#}
-{#        <input class="uk-button uk-button-primary" type="submit" value="회원가입" />#}
-{#    </div>#}
-{#</form>#}
-
 <form method="POST", action="{{ url_for('auth.signup') }}">
-
+     {{ form.csrf_token }}
     <fieldset class="uk-fieldset">
     {{ form.username.label }}
     {{ (form.username) }}
@@ -33,10 +15,45 @@
         {% endif %}
 
     </fieldset>
-
+    <fieldset class="uk-fieldset">
+    {{ form.email.label }}
     {{ (form.email) }}
+        {% if form.email.errors %}
+        <ul class="errors">
+          {% for error in form.email.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    <fieldset class="uk-fieldset">
+    {{ form.password.label }}
     {{ (form.password) }}
+        {% if form.password.errors %}
+        <ul class="errors">
+          {% for error in form.password.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    <fieldset class="uk-fieldset">
+    {{ form.confirm.label }}
     {{ (form.confirm) }}
+        {% if form.confirm.errors %}
+        <ul class="errors">
+          {% for error in form.confirm.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+
+
+
     {{ form.submit }}
 
 </form>
