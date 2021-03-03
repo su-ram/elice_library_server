@@ -21,7 +21,7 @@ def create_app():
     @app.route('/')
     def hello_world():
 
-        from .login_form import LoginForm
+        from .forms import LoginForm
         form = LoginForm()
 
         return render_template('auth/index.html', form=form)

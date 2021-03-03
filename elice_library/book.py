@@ -4,7 +4,6 @@ from flask import Blueprint, render_template, Response, session, request, redire
 from elice_library import db
 from .models import Book, Comment
 from datetime import datetime
-from flask_pagination import paginate
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
