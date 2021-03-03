@@ -6,7 +6,7 @@
     {% endif %}
 {% endwith %}
     <div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
-{% for book in books %}
+{% for book in books.items %}
 
     <div>
         <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
@@ -26,4 +26,24 @@
 
 {% endfor%}
 </div>
+    <div>
+        <ul class="uk-pagination uk-flex-center" uk-margin>
+
+            {% if books.has_prev %}
+            <li><a href="#"><span uk-pagination-previous></span></a></li>
+            {% endif %}
+
+            {% for page in books.iter_pages() %}
+                {% if page == books.page %}
+                    <li class="uk-active" ><a href="/book?page={{ page }}">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="/book?page={{ page }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if books.has_next %}
+                <li><a href="#"><span uk-pagination-next></span></a></li>
+            {% endif %}
+        </ul>
+    </div>
 {% endblock %}

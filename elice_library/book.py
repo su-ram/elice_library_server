@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, Response, session, request, redire
 from elice_library import db
 from .models import Book, Comment
 from datetime import datetime
+from flask_pagination import paginate
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -49,8 +50,9 @@ def initBook():
 @bp.route('/')
 def getAllBook():
 
-    books = Book.query.all()
-
+    page = request.args.get('page', type=int, default=1)
+    books = Book.query.paginate(page, per_page=8)
+    print(books.iter_pages)
     return render_template('book/main.html', books=books)
 
 @bp.route('/<int:bookid>')

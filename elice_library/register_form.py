@@ -4,8 +4,9 @@ from flask_wtf import FlaskForm
 class RegistrationForm(FlaskForm):
 
     username = StringField('Username', [
-        validators.Length(min=2, max=25, message='2자 이상 25자 이하로 입력해주세용.'),
-        validators.DataRequired(message='입력해주세용')],
+        validators.Length(min=2, max=25),
+        validators.DataRequired(),
+        validators.regexp(regex='^[가-힣a-zA-Z]+$')],
         render_kw={"class":"uk-input uk-form-width-medium","placeholder":"username"})
 
     email = StringField('Email Address', [
@@ -13,10 +14,11 @@ class RegistrationForm(FlaskForm):
         validators.Email(message='Not a valid email address.'),
         validators.DataRequired()
     ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"email"})
+
     password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"password"})
+        validators.DataRequired(message='꼭 입력해주셈.'),
+        ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"password"})
+
     confirm = PasswordField('Confirm Password',[
         validators.EqualTo('password', message='비밀번호가 일치하지 않습니다.')],
         render_kw={"class":"uk-input uk-form-width-medium","placeholder":"confirm"})
