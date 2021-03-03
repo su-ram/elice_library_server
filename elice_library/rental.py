@@ -10,9 +10,13 @@ def rentalBook():
     bookid = request.form.get("bookid")
     book = Book.query.filter(Book.id == bookid).first()
     userid = session['userid']
+    existing_rental = Rental.query.filter(Rental.userid == userid, Rental.bookid == bookid, Rental.return_date == None).first()
 
     if book.quantity < 1:
         flash("모든 책이 대출되었습니다.", category="error")
+
+    elif existing_rental:
+        flash("이미 대여한 책입니다.", category="error")
 
     else:
         new_rental = Rental(userid=userid, bookid=bookid)

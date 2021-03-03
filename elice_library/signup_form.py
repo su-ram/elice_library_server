@@ -23,4 +23,4 @@ class RegistrationForm(FlaskForm):
         validators.EqualTo('password')],
         render_kw={"class":"uk-input uk-form-width-medium","placeholder":"confirm"})
 
-    submit = SubmitField('Submit')
+    submit = SubmitField('회원가입')
