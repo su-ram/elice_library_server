@@ -27,7 +27,7 @@ def rentalBook():
 def login_check():
 
     if 'userid' not in session.keys():
-        return redirect('/')
+        return redirect(url_for('auth.login'))
 
 
 @bp.route('/return', methods=('GET', 'POST'))

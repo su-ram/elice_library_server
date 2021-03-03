@@ -52,7 +52,7 @@ def getAllBook():
 
     page = request.args.get('page', type=int, default=1)
     books = Book.query.paginate(page, per_page=8)
-    print(books.iter_pages)
+
     return render_template('book/main.html', books=books)
 
 @bp.route('/<int:bookid>')

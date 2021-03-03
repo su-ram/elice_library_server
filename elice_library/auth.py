@@ -1,7 +1,8 @@
-from flask import Blueprint, request, render_template, session, flash, redirect
+from flask import Blueprint, url_for, render_template, session, flash, redirect
 from .models import User
 from . import db
-from .register_form import RegistrationForm
+from .signup_form import RegistrationForm
+from .login_form import LoginForm
 
 bp = Blueprint("auth", __name__)
 
@@ -11,44 +12,41 @@ def signup():
     form = RegistrationForm()
 
     if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.email.data).first()
 
-        duplicate = User.query.filter_by(email=form.email.data).first()
+        if existing_user :
+            flash("중복된 이메일입니다.", category="error")
 
-        if duplicate is not None:
-            return render_template('auth/index.html'), 409
+        else:
+            user = User(name=form.username.data, email=form.email.data, password=form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            session['userid'] = user.id
 
-        user = User(name=form.username.data, email=form.email.data, password=form.password.data)
-
-        db.session.add(user)
-        db.session.commit()
-        session['userid'] = user.id
-
-        return redirect('/book')
+            return redirect(url_for('book.getAllBook'))
 
     return render_template('auth/signup.html', form=form)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
 
+    form = LoginForm()
+    status_code = 200
 
-    if request.method == 'POST':
+    if form.validate_on_submit():
 
-        email = request.form['email']
-        password = request.form['password']
-        user =  User.query.filter_by(email=email).first()
+        user =  User.query.filter_by(email=form.email.data).first()
 
-        status_code = 200
-
-        if user.password != password:
+        if user.password != form.password.data:
+            flash("비밀번호 불일치", category="error")
             status_code = 403
-            return render_template('auth/index.html'), 403
 
-        if user is not None:
+        elif user :
             session['userid'] = user.id
             flash("성공적으로 로그인되었습니다.", category="success")
-            return redirect('/book')
+            return redirect(url_for('book.getAllBook'))
 
-    return render_template('auth/index.html'), status_code
+    return render_template('auth/index.html', form=form), status_code
 
 @bp.route('/logout')
 def logout():
@@ -56,4 +54,4 @@ def logout():
     if 'userid' in session.keys() and session['userid']:
         session.clear()
 
-    return render_template('auth/index.html')
+    return redirect(url_for('auth.login'))

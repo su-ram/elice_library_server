@@ -20,6 +20,10 @@ def create_app():
 
     @app.route('/')
     def hello_world():
-        return render_template('auth/index.html')
+
+        from .login_form import LoginForm
+        form = LoginForm()
+
+        return render_template('auth/index.html', form=form)
 
     return app

@@ -4,23 +4,23 @@ from flask_wtf import FlaskForm
 class RegistrationForm(FlaskForm):
 
     username = StringField('Username', [
-        validators.Length(min=2, max=25),
+        validators.Length(min=2, max=20),
         validators.DataRequired(),
         validators.regexp(regex='^[가-힣a-zA-Z]+$')],
         render_kw={"class":"uk-input uk-form-width-medium","placeholder":"username"})
 
     email = StringField('Email Address', [
-        validators.Length(min=6, max=35),
+        validators.Length(min=6, max=30),
         validators.Email(message='Not a valid email address.'),
         validators.DataRequired()
     ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"email"})
 
     password = PasswordField('New Password', [
-        validators.DataRequired(message='꼭 입력해주셈.'),
+        validators.DataRequired(),
         ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"password"})
 
     confirm = PasswordField('Confirm Password',[
-        validators.EqualTo('password', message='비밀번호가 일치하지 않습니다.')],
+        validators.EqualTo('password')],
         render_kw={"class":"uk-input uk-form-width-medium","placeholder":"confirm"})
 
     submit = SubmitField('Submit')
