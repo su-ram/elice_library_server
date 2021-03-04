@@ -1,12 +1,13 @@
 from elice_library import db
 from datetime import datetime
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(UserMixin,db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20))
     email = db.Column(db.String(30), primary_key=True)
-    password = db.Column(db.String(30))
+    password = db.Column(db.String(100))
 
 
 class Book(db.Model):
@@ -22,7 +23,7 @@ class Book(db.Model):
     rating = db.Column(db.Integer)
     isbn = db.Column(db.BIGINT)
     quantity = db.Column(db.Integer)
-    image_path = db.Column(db.String(50))
+    image_path = db.Column(db.String(100))
 
 
 class Rental(db.Model):
@@ -42,6 +43,14 @@ class Comment(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship('User')
     content = db.Column(db.TEXT)
-    rating = db.Column(db.Integer)
     create_date = db.Column(db.DateTime, default=datetime.today())
 
+
+class Rating(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    commentid = db.Column(db.Integer, db.ForeignKey("comment.id"))
+    comment = db.relationship('Comment')
+    bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
+    rating = db.Column(db.Integer)
+    create_date = db.Column(db.DateTime, default=datetime.today())
