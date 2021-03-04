@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+    {% with messages = get_flashed_messages(category_filter=["alert"]) %}
     {% if messages %}
     <script type="text/javascript">UIkit.notification({message: '{{messages[0]}}', pos: 'top-center', status: 'success'})</script>
     {% endif %}

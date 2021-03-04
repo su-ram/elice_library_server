@@ -1,5 +1,10 @@
 from elice_library import db
 from datetime import datetime
+from . import login_manager
+
+@login_manager.user_loader
+def load_user(userid):
+    return User.get(userid)
 
 class User(db.Model):
 
@@ -7,7 +12,12 @@ class User(db.Model):
     name = db.Column(db.String(20))
     email = db.Column(db.String(30), primary_key=True)
     password = db.Column(db.String(30))
+    is_active = False
+    is_authenticated = False
+    is_anonymous = True
 
+    def get_id(self):
+        return self.id
 
 class Book(db.Model):
 

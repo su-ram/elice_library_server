@@ -1,9 +1,10 @@
 import csv
 import random
-from flask import Blueprint, render_template, Response, session, request, redirect, url_for
+from flask import Blueprint, render_template, Response, request, redirect, url_for
 from elice_library import db
 from .models import Book, Comment
 from datetime import datetime
+from flask_login import current_user, login_required
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -63,9 +64,10 @@ def getBook(bookid):
     return render_template('book/info.html', book=book, comments=comments)
 
 @bp.route('/<int:bookid>/comment', methods=["POST"])
+@login_required
 def create_comment(bookid):
 
-    userid = session['userid']
+    userid = current_user.get_id()
 
     if request.method == "POST":
 
@@ -90,4 +92,3 @@ def create_comment(bookid):
         db.session.commit()
 
     return redirect(url_for('book.getBook',bookid=bookid))
-

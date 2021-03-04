@@ -2,6 +2,7 @@ from flask import Blueprint, url_for, render_template, session, flash, redirect
 from .models import User
 from . import db
 from .forms import *
+from flask_login import login_user, login_required
 
 bp = Blueprint("auth", __name__)
 
@@ -21,6 +22,7 @@ def signup():
             db.session.add(user)
             db.session.commit()
             session['userid'] = user.id
+            login_user(user=user)
 
             return redirect(url_for('book.getAllBook'))
 
@@ -42,15 +44,18 @@ def login():
 
         elif user :
             session['userid'] = user.id
+
+            login_user(user=user)
+
             flash("성공적으로 로그인되었습니다.", category="success")
             return redirect(url_for('book.getAllBook'))
 
     return render_template('auth/index.html', form=form), status_code
 
 @bp.route('/logout')
+@login_required
 def logout():
 
-    if 'userid' in session.keys() and session['userid']:
-        session.clear()
+    login_user()
 
     return redirect(url_for('auth.login'))
