@@ -1,9 +1,9 @@
-from flask import Blueprint, url_for, render_template, session, flash, redirect
+from flask import Blueprint, url_for, render_template, flash, redirect
 from .models import User
 from . import db
 from .forms import *
-from flask_login import login_user, login_required
-
+from flask_login import login_user, login_required, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
 bp = Blueprint("auth", __name__)
 
 @bp.route('/signup', methods=('GET', 'POST'))
@@ -18,10 +18,11 @@ def signup():
             flash("중복된 이메일입니다.", category="error")
 
         else:
-            user = User(name=form.username.data, email=form.email.data, password=form.password.data)
+
+            user = User(name=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data))
             db.session.add(user)
             db.session.commit()
-            session['userid'] = user.id
+
             login_user(user=user)
 
             return redirect(url_for('book.getAllBook'))
@@ -38,12 +39,14 @@ def login():
 
         user =  User.query.filter_by(email=form.email.data).first()
 
-        if user.password != form.password.data:
+        if not user:
+            flash("없는 계정입니다.", category="error")
+
+        elif check_password_hash( form.password.data, user.password):
             flash("비밀번호 불일치", category="error")
             status_code = 403
 
         elif user :
-            session['userid'] = user.id
 
             login_user(user=user)
 
@@ -53,9 +56,8 @@ def login():
     return render_template('auth/index.html', form=form), status_code
 
 @bp.route('/logout')
-@login_required
 def logout():
 
-    login_user()
+    logout_user()
 
     return redirect(url_for('auth.login'))

@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, session, url_for, render_template, flash
+from flask import Blueprint, redirect, request, url_for, render_template, flash
 from elice_library import db
 from .models import Book, Rental
 from datetime import date

@@ -1,23 +1,14 @@
 from elice_library import db
 from datetime import datetime
-from . import login_manager
+from flask_login import UserMixin
 
-@login_manager.user_loader
-def load_user(userid):
-    return User.get(userid)
-
-class User(db.Model):
+class User(UserMixin,db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20))
     email = db.Column(db.String(30), primary_key=True)
-    password = db.Column(db.String(30))
-    is_active = False
-    is_authenticated = False
-    is_anonymous = True
+    password = db.Column(db.String(100))
 
-    def get_id(self):
-        return self.id
 
 class Book(db.Model):
 
@@ -52,6 +43,14 @@ class Comment(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship('User')
     content = db.Column(db.TEXT)
-    rating = db.Column(db.Integer)
     create_date = db.Column(db.DateTime, default=datetime.today())
 
+
+class Rating(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    commentid = db.Column(db.Integer, db.ForeignKey("comment.id"))
+    comment = db.relationship('Comment')
+    bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
+    rating = db.Column(db.Integer)
+    create_date = db.Column(db.DateTime, default=datetime.today())

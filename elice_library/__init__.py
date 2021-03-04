@@ -16,6 +16,12 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
+    from .models import User
+    @login_manager.user_loader
+    def user_loader(id):
+        user = User.query.filter(User.id == id).first()
+        return user
+
     from . import auth, book, rental
 
     app.register_blueprint(auth.bp)
@@ -23,7 +29,7 @@ def create_app():
     app.register_blueprint(rental.bp)
 
     @app.route('/')
-    def hello_world():
+    def home():
 
         from .forms import LoginForm
         form = LoginForm()

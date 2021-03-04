@@ -1,5 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    {% with messages = get_flashed_messages(category_filter=["alert"]) %}
+        {% if messages %}
+            <script type="text/javascript">UIkit.notification({message: '{{messages[0]}}', pos: 'top-center', status: 'success'})</script>
+        {% endif %}
+    {% endwith %}
+
     <div class="uk-card uk-card-default uk-card-large uk-card-body">
     <div class="uk-column-1-2 uk-padding">
          <img src = "{{book.image_path}}" style="width: auto"/>
@@ -39,20 +46,21 @@
     <div class="uk-padding-large">
         <ul uk-accordion="multiple: true">
     <li>
-        <a class="uk-accordion-title" href="#"><h3>댓글</h3></a>
+        <a class="uk-accordion-title" href="#"><h3>댓글({{ comments|length }})</h3></a>
         <div class="uk-accordion-content uk-margin-large-left uk-margin-large-right">
             <dl class="uk-description-list uk-description-list-divider">
         {% for comment in comments %}
-            <dt>{{ comment.user.name }}
+            {% with cmt = comment.comment %}
+            <dt>{{ cmt.user.name }}
                 {% if comment.rating %}
                 <span class="uk-label">{{ comment.rating }}점</span>
                 {% endif %}
             </dt>
-            <dd><p>{{ comment.content}} {{ comment.create_date }}</p>
+            <dd><p>{{ cmt.content}} {{ comment.create_date }}</p>
             </dd>
+            {% endwith %}
         {% endfor %}
         </dl>
-
         </div>
     </li>
     <li>
@@ -61,34 +69,20 @@
             <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="post">
 
          <div class="uk-margin">
-            <textarea class="uk-textarea" name="content" rows="3"></textarea>
+            <textarea required class="uk-textarea" name="content" rows="3"></textarea>
         </div>
-
-        <div class="uk-column-1-4">
-            <div><h4>평점</h4></div>
-            <div class="uk-form-controls">
-                <label><input class="uk-radio" type="radio" name="rating" value="1"> 1</label>
-                <label><input class="uk-radio" type="radio" name="rating" value="2"> 2</label>
-                <label><input class="uk-radio" type="radio" name="rating" value="3"> 3</label>
-                <label><input class="uk-radio" type="radio" name="rating" value="4"> 4</label>
-                <label><input class="uk-radio" type="radio" name="rating" value="5"> 5</label>
-            </div>
-            <div class="uk-margin">
+                <div>
+                    <h4>평점</h4>
+            <input required id="input-1" name="rating" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
                 <input class="uk-button uk-button-primary" type="submit" value="댓글 작성"/>
-            </div>
-        </div>
-
-
-
-
+                </div>
 
     </form>
+
         </div>
     </li>
 </ul>
     </div>
-
-
     </div>
 
 
