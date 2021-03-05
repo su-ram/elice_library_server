@@ -1,15 +1,18 @@
-from flask import Blueprint, url_for, render_template, flash, redirect
+from flask import Blueprint, url_for, render_template, flash, redirect, request
 from .models import User
 from . import db
 from .forms import *
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from .upload_image import upload_image
+
 bp = Blueprint("auth", __name__)
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
 
     form = RegistrationForm()
+
 
     if form.validate_on_submit():
         existing_user = User.query.filter_by(email=form.email.data).first()
@@ -24,6 +27,12 @@ def signup():
             db.session.commit()
 
             login_user(user=user)
+
+            if form.image.data:
+                file = form.image.data
+                file.filename = str(user.id)+'.'+file.mimetype.split('/')[1]
+                file.save('./elice_library/images/'+file.filename)
+                upload_image(file.filename)
 
             return redirect(url_for('book.getAllBook'))
 

@@ -66,7 +66,7 @@
     <li>
         <a class="uk-accordion-title" href="#"><h3>댓글달기</h3></a>
         <div class="uk-accordion-content uk-margin-large-left uk-margin-large-right">
-            <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="post">
+            <form action="{{ url_for('book.create_comment', bookid=book.id) }}", method="POST">
 
          <div class="uk-margin">
             <textarea required class="uk-textarea" name="content" rows="3"></textarea>

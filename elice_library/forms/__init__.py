@@ -1,7 +1,12 @@
-from wtforms import StringField, PasswordField, SubmitField, validators
+from wtforms import StringField, PasswordField, SubmitField, validators, FileField
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileRequired, FileAllowed
 
 class RegistrationForm(FlaskForm):
+
+    image = FileField(u'Image File',[
+        FileRequired(),
+        FileAllowed(['jpg', 'png'], 'Images only!')])
 
     username = StringField('Username', [
         validators.Length(min=2, max=20),

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, Response, request, redirect, url_f
 from elice_library import db
 from .models import Book, Comment, Rating
 from datetime import datetime
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, user_unauthorized
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -58,14 +58,14 @@ def getAllBook():
 @bp.route('/<int:bookid>')
 def getBook(bookid):
 
+    print(user_unauthorized)
     book = Book.query.get(bookid)
     # comments = Comment.query.filter(Comment.bookid == bookid).order_by(Comment.create_date.desc()).all()
     comments = Rating.query.filter(Rating.bookid == bookid).order_by(Rating.create_date.desc()).all()
 
     return render_template('book/info.html', book=book, comments=comments)
 
-@bp.route('/<int:bookid>/comment', methods=["POST"])
-@login_required
+@bp.route('/<int:bookid>/comment', methods=["POST", "GET"])
 def create_comment(bookid):
 
     userid = current_user.get_id()
@@ -87,7 +87,6 @@ def create_comment(bookid):
         rating = Rating(commentid=comment.id, rating=rating_value, bookid=bookid)
         db.session.add(rating)
         db.session.commit()
-
 
         ratings = Rating.query.filter(Rating.bookid == bookid).all()
         sum_rating = 0

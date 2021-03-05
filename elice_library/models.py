@@ -41,6 +41,7 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
     userid = db.Column(db.Integer, db.ForeignKey("user.id"))
+    __table_args__ = ((db.UniqueConstraint('bookid','userid',name='uniqe_bookid_userid'),))
     user = db.relationship('User')
     content = db.Column(db.TEXT)
     create_date = db.Column(db.DateTime, default=datetime.today())
