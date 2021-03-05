@@ -14,8 +14,7 @@ def upload_image(filename):
         with file as data:
             blob_client.upload_blob(data, blob_type="BlockBlob")
 
-        properties = blob_client.get_blob_properties()
-        print(properties)
+        os.remove(filepath)
 
     except Exception as ex:
         print('Exception:')
