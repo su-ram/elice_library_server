@@ -40,6 +40,10 @@
             <li class="uk-active"><a href="/log">대여기록</a></li>
             <li class="uk-active"><a href="/return">반납하기</a></li>
             <li class="uk-active"><a href="/logout">로그아웃</a></li>
+            {% if current_user.is_authenticated %}
+            <li><img src="{{ current_user.image}}" width="112" height="28"></li>
+                <li>{{ current_user.name }}</li>
+            {% endif %}
         </ul>
     </div>
     </nav>

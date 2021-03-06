@@ -46,7 +46,8 @@ def return_book():
         book.quantity += 1
         db.session.commit()
 
-    rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date == None).all()
+    page = request.args.get('page', type=int, default=1)
+    rentals = Rental.query.filter(Rental.userid == userid, Rental.return_date == None).paginate(page, per_page=8)
 
     return render_template('book/return.html', rentals = rentals)
 
@@ -55,6 +56,7 @@ def return_book():
 def rental_log():
 
     userid = current_user.get_id()
-    rentals = Rental.query.filter(Rental.userid == userid).order_by(Rental.rental_date.desc()).all()
+    page = request.args.get('page', type=int, default=1)
+    rentals = Rental.query.filter(Rental.userid == userid).order_by(Rental.rental_date.desc()).paginate(page, per_page=8)
 
     return render_template('book/rental_log.html', rentals = rentals)

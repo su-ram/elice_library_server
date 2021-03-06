@@ -8,6 +8,7 @@ class User(UserMixin,db.Model):
     name = db.Column(db.String(20))
     email = db.Column(db.String(30), primary_key=True)
     password = db.Column(db.String(100))
+    image = db.Column(db.String(100))
 
 
 class Book(db.Model):

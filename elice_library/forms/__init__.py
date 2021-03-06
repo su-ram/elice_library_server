@@ -5,7 +5,6 @@ from flask_wtf.file import FileRequired, FileAllowed
 class RegistrationForm(FlaskForm):
 
     image = FileField(u'Image File',[
-        FileRequired(),
         FileAllowed(['jpg', 'png'], 'Images only!')])
 
     username = StringField('Username', [

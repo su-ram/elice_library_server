@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
-{% for rental in rentals %}
+{% for rental in rentals.items %}
 {% with book=rental.book %}
     <div>
         <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
@@ -20,4 +20,25 @@
 {% endwith %}
 {% endfor%}
 </div>
+            <div class="uk-margin">
+        <ul class="uk-pagination uk-flex-center" uk-margin>
+
+            {% if rentals.has_prev %}
+            <li><a href="{{url_for('rental.return_book', page = rentals.prev_num)}}"><span uk-pagination-previous></span></a></li>
+            {% endif %}
+
+            {% for page in rentals.iter_pages() %}
+                {% if page == rentals.page %}
+                    <li class="uk-active" ><a href="{{url_for('rental.return_book', page = page)}}">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="{{url_for('rental.return_book', page = page)}}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if rentals.has_next %}
+                <li><a href="{{url_for('rental.return_book', page = rentals.next_num)}}"><span uk-pagination-next></span></a></li>
+            {% endif %}
+        </ul>
+    </div>
+
 {% endblock %}

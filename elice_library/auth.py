@@ -4,14 +4,18 @@ from . import db
 from .forms import *
 from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from .upload_image import upload_image
+from .upload_image import ProfileImage
+import jwt
 
 bp = Blueprint("auth", __name__)
+profile_image = ProfileImage()
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
 
     form = RegistrationForm()
+
+
 
 
     if form.validate_on_submit():
@@ -23,16 +27,17 @@ def signup():
         else:
 
             user = User(name=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data))
-            db.session.add(user)
-            db.session.commit()
-
-            login_user(user=user)
 
             if form.image.data:
                 file = form.image.data
                 file.filename = str(user.id)+'.'+file.mimetype.split('/')[1]
                 file.save('./elice_library/images/'+file.filename)
-                upload_image(file.filename)
+                image_url = profile_image.upload_image(file.filename)
+                user.image = image_url
+
+            db.session.add(user)
+            db.session.commit()
+            login_user(user=user)
 
             return redirect(url_for('book.getAllBook'))
 
@@ -58,6 +63,7 @@ def login():
         elif user :
 
             login_user(user=user)
+
 
             flash("성공적으로 로그인되었습니다.", category="success")
             return redirect(url_for('book.getAllBook'))
