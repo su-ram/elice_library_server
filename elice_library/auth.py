@@ -5,7 +5,7 @@ from .forms import *
 from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .upload_image import ProfileImage
-
+import random
 bp = Blueprint("auth", __name__)
 profile_image = ProfileImage()
 
@@ -13,6 +13,10 @@ profile_image = ProfileImage()
 def signup():
 
     form = RegistrationForm()
+    default_images = AnonymouseImage.query.all()
+    for i in default_images:
+        print(i)
+    form.setDefaultUrls(default_images)
 
     if form.validate_on_submit():
         existing_user = User.query.filter_by(email=form.email.data).first()
@@ -22,7 +26,10 @@ def signup():
 
         else:
 
-            user = User(name=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data))
+            if form.default_images.data == '0':
+                import random
+                form.default_images.data = default_images[random.randrange(len(default_images))].url
+            user = User(name=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data), image=form.default_images.data)
 
             if form.image.data:
                 file = form.image.data
@@ -37,8 +44,7 @@ def signup():
 
             return redirect(url_for('book.getAllBook'))
 
-    # form.defalut_images = AnonymouseImage.query.all()
-    # form.defalut_images.
+    #
 
     return render_template('auth/signup.html', form=form)
 

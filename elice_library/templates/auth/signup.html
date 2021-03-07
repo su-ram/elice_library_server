@@ -11,16 +11,32 @@
 <form method="POST", action="{{ url_for('auth.signup') }}", enctype="multipart/form-data">
      {{ form.csrf_token }}
 
-
     <fieldset class="uk-fieldset">
+    <p>{{ form.default_images.label }}</p>
+    {% for image in form.default_images %}
+        {% if image.data[0] == '0' %}
+            {{ image }}
+            <labe>선택 안함</labe>
+        {% else %}
+            <span>{{ image }}</span>
+            <img src="{{ image.data }}" width="80px"/>
+        {% endif %}
+
+    {% endfor %}
+        {% if form.default_images.errors %}
+        <ul class="errors">
+          {% for error in form.default_images.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+    </fieldset>
+
+
+
+
+      <fieldset class="uk-fieldset">
         {{ form.image.label }}
-    {% if form.defalut_images %}
-    {% for image in form.defalut_images %}
-        <a href="#">
-        <img src="{{ image.url }}" width="100px">
-        </a>
-        {% endfor %}
-    {% endif %}
         {{ (form.image) }}
             {% if form.image.errors %}
             <ul class="errors">
@@ -30,6 +46,8 @@
             </ul>
             {% endif %}
 
+        </fieldset>
+    </fieldset>
         </fieldset>
         <fieldset class="uk-fieldset">
     {{ form.username.label }}

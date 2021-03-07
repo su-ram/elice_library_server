@@ -4,11 +4,17 @@ from flask_wtf.file import FileAllowed
 
 class RegistrationForm(FlaskForm):
 
-    default_image = RadioField('Profile Images', choices=[('choice1', '1'), ('choice2','2')])
+    default_images = RadioField('Profile Images', choices=['0', 'upload'], default='0')
 
-    def setUrls(self,urls):
+    def setDefaultUrls(self, urls):
 
-        pass
+        url_list = []
+        for i in range(len(urls)):
+            url_list.append((urls[i].url,urls[i].url))
+        url_list.append(('0','0'))
+        self.default_images.choices = url_list
+        print(self.default_images.choices)
+
 
     image = FileField(u'Image File',[
         FileAllowed(['jpg', 'png'], 'Images only!')])
