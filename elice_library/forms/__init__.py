@@ -1,8 +1,14 @@
-from wtforms import StringField, PasswordField, SubmitField, validators, FileField
+from wtforms import StringField, PasswordField, SubmitField, validators, FileField, RadioField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileRequired, FileAllowed
+from flask_wtf.file import FileAllowed
 
 class RegistrationForm(FlaskForm):
+
+    default_image = RadioField('Profile Images', choices=[('choice1', '1'), ('choice2','2')])
+
+    def setUrls(self,urls):
+
+        pass
 
     image = FileField(u'Image File',[
         FileAllowed(['jpg', 'png'], 'Images only!')])

@@ -1,11 +1,10 @@
 from flask import Blueprint, url_for, render_template, flash, redirect, request
-from .models import User
+from .models import User, AnonymouseImage
 from . import db
 from .forms import *
 from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .upload_image import ProfileImage
-import jwt
 
 bp = Blueprint("auth", __name__)
 profile_image = ProfileImage()
@@ -14,9 +13,6 @@ profile_image = ProfileImage()
 def signup():
 
     form = RegistrationForm()
-
-
-
 
     if form.validate_on_submit():
         existing_user = User.query.filter_by(email=form.email.data).first()
@@ -41,6 +37,9 @@ def signup():
 
             return redirect(url_for('book.getAllBook'))
 
+    # form.defalut_images = AnonymouseImage.query.all()
+    # form.defalut_images.
+
     return render_template('auth/signup.html', form=form)
 
 @bp.route('/login', methods=('GET', 'POST'))
@@ -63,7 +62,6 @@ def login():
         elif user :
 
             login_user(user=user)
-
 
             flash("성공적으로 로그인되었습니다.", category="success")
             return redirect(url_for('book.getAllBook'))

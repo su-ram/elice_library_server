@@ -56,3 +56,14 @@ class Rating(db.Model):
     bookid = db.Column(db.Integer, db.ForeignKey("book.id"))
     rating = db.Column(db.Integer)
     create_date = db.Column(db.DateTime, default=datetime.today())
+
+class AnonymousUser(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50))
+
+class AnonymouseImage(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    url = db.Column(db.String(100))
+

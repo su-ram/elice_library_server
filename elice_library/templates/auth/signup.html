@@ -10,8 +10,17 @@
     <h4>회원가입</h4>
 <form method="POST", action="{{ url_for('auth.signup') }}", enctype="multipart/form-data">
      {{ form.csrf_token }}
+
+
     <fieldset class="uk-fieldset">
-        {{ form.username.label }}
+        {{ form.image.label }}
+    {% if form.defalut_images %}
+    {% for image in form.defalut_images %}
+        <a href="#">
+        <img src="{{ image.url }}" width="100px">
+        </a>
+        {% endfor %}
+    {% endif %}
         {{ (form.image) }}
             {% if form.image.errors %}
             <ul class="errors">

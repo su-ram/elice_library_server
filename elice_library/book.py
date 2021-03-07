@@ -2,9 +2,9 @@ import csv
 import random
 from flask import Blueprint, render_template, Response, request, redirect, url_for, flash
 from elice_library import db
-from .models import Book, Comment, Rating
+from .models import Book, Comment, Rating, AnonymousUser, AnonymouseImage
 from datetime import datetime
-from flask_login import current_user, login_required, user_unauthorized
+from flask_login import current_user, user_unauthorized
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -62,6 +62,15 @@ def getBook(bookid):
     book = Book.query.get(bookid)
     # comments = Comment.query.filter(Comment.bookid == bookid).order_by(Comment.create_date.desc()).all()
     comments = Rating.query.filter(Rating.bookid == bookid).order_by(Rating.create_date.desc()).all()
+
+    if not current_user.is_authenticated:
+
+        names = AnonymousUser.query.order_by(db.func.random()).limit(len(comments))
+        images = AnonymouseImage.query.all()
+
+        for i in range(len(comments)):
+            comments[i].comment.user.name = "익명의 " + names[i].name
+            comments[i].comment.user.image = images[random.randrange(len(images))].url
 
     return render_template('book/info.html', book=book, comments=comments)
 

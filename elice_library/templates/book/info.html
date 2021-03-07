@@ -41,10 +41,12 @@
                 <input hidden type="number" name="bookid" value="{{ book.id }}"/>
                 <input class="uk-button uk-button-secondary uk-width-1-1" type = "submit" value="대여하기"></form>
             </form>
-        <form action="{{ url_for('rental.rentalBook') }}" method="post">
-                <input hidden type="number" name="bookid" value="{{ book.id }}"/>
-                <input class="uk-button uk-button-secondary uk-width-1-1" type = "submit" value="공유하기"></form>
-            </form>
+
+
+                <input hidden type="text" value = "<script  "id = "ShareUrl" readonly>
+                <button class="uk-button uk-button-secondary uk-width-1-1" value="공유하기" onclick="urlClipCopy()">
+                    공유하기</button>
+
     </div>
 
     <div class="uk-placeholder uk-text-emphasis">
@@ -59,8 +61,10 @@
             <dl class="uk-description-list uk-description-list-divider">
         {% for comment in comments %}
             {% with cmt = comment.comment %}
-                <img src = "{{cmt.user.image}}" style="width: auto"/>
-            <dt>{{ cmt.user.name }}
+
+            <dt>
+                 <img src = "{{cmt.user.image}}" style="width: 70px "/>
+                {{ cmt.user.name }}
                 {% if comment.rating %}
                 <span class="uk-label">{{ comment.rating }}점</span>
                 {% endif %}
