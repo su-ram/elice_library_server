@@ -11,10 +11,12 @@
     <div>
         <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
             <div class="uk-card-media-top">
-                <img class="uk-border-rounded" src="{{ book.image_path }}" uk-img >
+                <a href="{{ book.id }}"><img class="uk-border-rounded" src="{{ book.image_path }}" uk-img ></a>
             </div>
             <a class="uk-link-text" href="{{ book.id }}">{{ book.book_name }}</a>
-            <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
+            <div class="uk-card-badge">
+                <input readonly class="rating rating-loading" data-size="sm" data-min="0" data-max="5" data-step="1" value="{{ book.rating }}">
+</div>
             <p style="alignment: right">{{ book.quantity }}권 남음</p>
 
         </div>
@@ -30,7 +32,7 @@
         <ul class="uk-pagination uk-flex-center" uk-margin>
 
             {% if books.has_prev %}
-            <li><a href="#"><span uk-pagination-previous></span></a></li>
+            <li><a href="{{url_for('book.getAllBook', page = books.prev_num)}}"><span uk-pagination-previous></span></a></li>
             {% endif %}
 
             {% for page in books.iter_pages() %}
@@ -42,7 +44,7 @@
             {% endfor %}
 
             {% if books.has_next %}
-                <li><a href="#"><span uk-pagination-next></span></a></li>
+                <li><a href="{{url_for('book.getAllBook', page = books.next_num)}}"><span uk-pagination-next></span></a></li>
             {% endif %}
         </ul>
     </div>

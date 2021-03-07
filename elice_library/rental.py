@@ -57,6 +57,24 @@ def rental_log():
 
     userid = current_user.get_id()
     page = request.args.get('page', type=int, default=1)
-    rentals = Rental.query.filter(Rental.userid == userid).order_by(Rental.rental_date.desc()).paginate(page, per_page=8)
+    rentals = Rental.query.filter(Rental.userid == userid).paginate(page, per_page=8, error_out=False)
+    next_pages = page_list(rentals, 3)
 
-    return render_template('book/rental_log.html', rentals = rentals)
+    return render_template('book/rental_log.html', rentals = rentals, next_pages=next_pages)
+
+def page_list(pagination, offset):
+
+
+    current_page = pagination.page
+    pages = [current_page]
+    offset = offset
+
+    for i in range(1, offset+1):
+
+        if current_page - i > 0:
+            pages.append(current_page - i)
+
+        if current_page + i <= pagination.pages:
+            pages.append(current_page+i)
+
+    return sorted(pages)

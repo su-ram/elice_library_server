@@ -10,7 +10,9 @@
 
             <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
             <a class="uk-link-text" href="{{ url_for('book.getBook', bookid=book.id) }}">{{ book.book_name }}</a>
-            <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
+            <div class="uk-card-badge">
+                <input readonly class="rating rating-loading" data-size="sm" data-min="0" data-max="5" data-step="1" value="{{ book.rating }}">
+</div>
             <p><span class="uk-label">대출일</span> {{ rental.rental_date }}</p>
             <p><span class="uk-label">반납일</span> {{ rental.return_date }}</p>
 
@@ -26,11 +28,14 @@
             <li><a href="{{url_for('rental.rental_log', page = rentals.prev_num)}}"><span uk-pagination-previous></span></a></li>
             {% endif %}
 
-            {% for page in rentals.iter_pages() %}
-                {% if page == rentals.page %}
-                    <li class="uk-active" ><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
-                {% else %}
-                    <li><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
+            {% for page in next_pages %}
+
+                {% if page %}
+                    {% if page == rentals.page %}
+                        <li class="uk-active" ><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
 

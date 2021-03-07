@@ -13,7 +13,7 @@ class RegistrationForm(FlaskForm):
             url_list.append((urls[i].url,urls[i].url))
         url_list.append(('0','0'))
         self.default_images.choices = url_list
-        print(self.default_images.choices)
+
 
 
     image = FileField(u'Image File',[
@@ -32,7 +32,8 @@ class RegistrationForm(FlaskForm):
     ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"email"})
 
     password = PasswordField('New Password', [
-        validators.DataRequired(),
+        validators.DataRequired(),validators.regexp(regex='^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$'),
+        validators.length(min=8, max=20)
         ], render_kw={"class":"uk-input uk-form-width-medium","placeholder":"password"})
 
     confirm = PasswordField('Confirm Password',[
