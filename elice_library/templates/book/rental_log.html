@@ -1,23 +1,50 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div uk-grid>
-{% for rental in rentals %}
+
+    <div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
+
+{% for rental in rentals.items %}
 {% with book=rental.book%}
     <div>
-        <div class="uk-card uk-card-default uk-card-body">
+        <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
 
             <p><img class="uk-align-left uk-border-rounded" width="200" src="{{ book.image_path }}" width="" height="" alt="" uk-img ></p>
             <a class="uk-link-text" href="{{ url_for('book.getBook', bookid=book.id) }}">{{ book.book_name }}</a>
-            <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
+            <div class="uk-card-badge">
+                <input readonly class="rating rating-loading" data-size="sm" data-min="0" data-max="5" data-step="1" value="{{ book.rating }}">
+</div>
             <p><span class="uk-label">대출일</span> {{ rental.rental_date }}</p>
-
             <p><span class="uk-label">반납일</span> {{ rental.return_date }}</p>
-
 
         </div>
     </div>
 {% endwith %}
 {% endfor%}
+
+        <div class="uk-margin">
+        <ul class="uk-pagination uk-flex-center" uk-margin>
+
+            {% if rentals.has_prev %}
+            <li><a href="{{url_for('rental.rental_log', page = rentals.prev_num)}}"><span uk-pagination-previous></span></a></li>
+            {% endif %}
+
+            {% for page in next_pages %}
+
+                {% if page %}
+                    {% if page == rentals.page %}
+                        <li class="uk-active" ><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="{{url_for('rental.rental_log', page = page)}}">{{ page }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if rentals.has_next %}
+                <li><a href="{{url_for('rental.rental_log', page = rentals.next_num)}}"><span uk-pagination-next></span></a></li>
+            {% endif %}
+        </ul>
+    </div>
+
 </div>
 
 {% endblock %}

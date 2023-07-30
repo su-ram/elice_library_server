@@ -1,9 +1,10 @@
 import csv
 import random
-from flask import Blueprint, render_template, Response, session, request, redirect, url_for
+from flask import Blueprint, render_template, Response, request, redirect, url_for, flash
 from elice_library import db
-from .models import Book, Comment
+from .models import Book, Comment, Rating, AnonymousUser, AnonymouseImage
 from datetime import datetime
+from flask_login import current_user, user_unauthorized
 
 bp = Blueprint("book", __name__, url_prefix="/book")
 
@@ -49,44 +50,64 @@ def initBook():
 @bp.route('/')
 def getAllBook():
 
-    books = Book.query.all()
+    page = request.args.get('page', type=int, default=1)
+    books = Book.query.paginate(page, per_page=8)
 
     return render_template('book/main.html', books=books)
 
 @bp.route('/<int:bookid>')
 def getBook(bookid):
 
+    print(user_unauthorized)
     book = Book.query.get(bookid)
-    comments = Comment.query.filter(Comment.bookid == bookid).order_by(Comment.create_date.desc()).all()
+    # comments = Comment.query.filter(Comment.bookid == bookid).order_by(Comment.create_date.desc()).all()
+    comments = Rating.query.filter(Rating.bookid == bookid).order_by(Rating.create_date.desc()).all()
+
+    if not current_user.is_authenticated:
+
+        names = AnonymousUser.query.order_by(db.func.random()).limit(len(comments))
+        images = AnonymouseImage.query.all()
+
+        for i in range(len(comments)):
+            comments[i].comment.user.name = "익명의 " + names[i].name
+            comments[i].comment.user.image = images[random.randrange(len(images))].url
 
     return render_template('book/info.html', book=book, comments=comments)
 
-@bp.route('/<int:bookid>/comment', methods=["POST"])
+@bp.route('/<int:bookid>/comment', methods=["POST", "GET"])
 def create_comment(bookid):
 
-    userid = session['userid']
+    userid = current_user.get_id()
 
     if request.method == "POST":
 
         content = request.form['content']
-        rating = request.values.get('rating')
-        comment = Comment(userid=userid, content=content, bookid=bookid, rating = rating)
+        rating_value = request.values.get('rating')
+        exsiting_comment = Comment.query.filter(Comment.bookid == bookid, Comment.userid == userid).first()
+
+        if exsiting_comment:
+            flash(message="이미 평점을 남겼습니다.", category="alert")
+            return redirect(url_for('book.getBook', bookid=bookid))
+
+        comment = Comment(userid=userid, content=content, bookid=bookid)
         db.session.add(comment)
         db.session.commit()
 
-        ratings = Comment.query.filter(Comment.bookid == bookid, Comment.rating != None).all()
+        rating = Rating(commentid=comment.id, rating=rating_value, bookid=bookid)
+        db.session.add(rating)
+        db.session.commit()
 
+        ratings = Rating.query.filter(Rating.bookid == bookid).all()
         sum_rating = 0
-        num_ratings = len(ratings)
+        num_rating = len(ratings)
 
         for rating in ratings:
             sum_rating += rating.rating
 
-        avg_rating = round(sum_rating / num_ratings)
+        avg_rating = round(sum_rating / num_rating)
         book = Book.query.get(bookid)
         book.rating = avg_rating
-
         db.session.commit()
 
-    return redirect(url_for('book.getBook',bookid=bookid))
 
+    return redirect(url_for('book.getBook',bookid=bookid))

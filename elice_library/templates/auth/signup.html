@@ -1,21 +1,103 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+            <script type="text/javascript">UIkit.notification({message: '{{messages[0]}}', pos: 'top-center', status: 'success'})</script>
+        {% endif %}
+    {% endwith %}
+
     <h4>회원가입</h4>
-<form action="/signup" method="post">
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="text" name="name" placeholder="이름"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="text" name="email" placeholder="이메일"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="password" name="password" placeholder="비밀번호"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-input uk-form-width-medium" type="password" name="validation" placeholder="비밀번호 확인"/>
-    </div>
-    <div class="uk-form-controls uk-margin">
-        <input class="uk-button uk-button-primary" type="submit" value="회원가입" />
-    </div>
+<form method="POST", action="{{ url_for('auth.signup') }}", enctype="multipart/form-data">
+     {{ form.csrf_token }}
+
+    <fieldset class="uk-fieldset">
+    <p>{{ form.default_images.label }}</p>
+    {% for image in form.default_images %}
+        {% if image.data[0] == '0' %}
+            {{ image }}
+            <labe>선택 안함</labe>
+        {% else %}
+            <span>{{ image }}</span>
+            <img src="{{ image.data }}" width="80px"/>
+        {% endif %}
+
+    {% endfor %}
+        {% if form.default_images.errors %}
+        <ul class="errors">
+          {% for error in form.default_images.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+    </fieldset>
+
+
+
+
+      <fieldset class="uk-fieldset">
+        {{ form.image.label }}
+        {{ (form.image) }}
+            {% if form.image.errors %}
+            <ul class="errors">
+              {% for error in form.image.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+        </fieldset>
+    </fieldset>
+        </fieldset>
+        <fieldset class="uk-fieldset">
+    {{ form.username.label }}
+    {{ (form.username) }}
+        {% if form.username.errors %}
+        <ul class="errors">
+          {% for error in form.username.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    <fieldset class="uk-fieldset">
+    {{ form.email.label }}
+    {{ (form.email) }}
+        {% if form.email.errors %}
+        <ul class="errors">
+          {% for error in form.email.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    <fieldset class="uk-fieldset">
+    {{ form.password.label }}
+    {{ (form.password) }}
+        {% if form.password.errors %}
+        <ul class="errors">
+          {% for error in form.password.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    <fieldset class="uk-fieldset">
+    {{ form.confirm.label }}
+    {{ (form.confirm) }}
+        {% if form.confirm.errors %}
+        <ul class="errors">
+          {% for error in form.confirm.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    {{ form.submit }}
 </form>
+
 {% endblock %}

@@ -1,60 +1,82 @@
-from flask import Blueprint, request, render_template, session, flash, redirect
-from .models import User
+from flask import Blueprint, url_for, render_template, flash, redirect, request
+from .models import User, AnonymouseImage
 from . import db
-
+from .forms import *
+from flask_login import login_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from .upload_image import ProfileImage
+import random
 bp = Blueprint("auth", __name__)
+profile_image = ProfileImage()
 
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
 
-    if request.method == 'POST':
+    form = RegistrationForm()
+    default_images = AnonymouseImage.query.all()
+    for i in default_images:
+        print(i)
+    form.setDefaultUrls(default_images)
 
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.email.data).first()
 
-        duplicate = User.query.filter_by(email=email).first()
+        if existing_user :
+            flash("중복된 이메일입니다.", category="error")
 
-        if duplicate is not None:
-            return render_template('auth/index.html'), 409
+        else:
 
-        user = User(name=name, email=email, password=password)
+            if form.default_images.data == '0':
+                import random
+                form.default_images.data = default_images[random.randrange(len(default_images))].url
+            user = User(name=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data), image=form.default_images.data)
 
-        db.session.add(user)
-        db.session.flush()
-        session['userid'] = user.id
-        db.session.commit()
+            if form.image.data:
+                file = form.image.data
+                file.filename = str(user.id)+'.'+file.mimetype.split('/')[1]
+                file.save('./elice_library/images/'+file.filename)
+                image_url = profile_image.upload_image(file.filename)
+                user.image = image_url
 
-        return redirect('/book')
+            db.session.add(user)
+            db.session.commit()
+            login_user(user=user)
 
-    return render_template('auth/signup.html')
+            return redirect(url_for('book.getAllBook'))
+
+    #
+
+    return render_template('auth/signup.html', form=form)
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
 
-    if request.method == 'POST':
+    form = LoginForm()
+    status_code = 200
 
-        email = request.form['email']
-        password = request.form['password']
-        user =  User.query.filter_by(email=email).first()
+    if form.validate_on_submit():
 
-        status_code = 200
+        user =  User.query.filter_by(email=form.email.data).first()
 
-        if user.password != password:
+        if not user:
+            flash("없는 계정입니다.", category="error")
+
+        elif check_password_hash( form.password.data, user.password):
+            flash("비밀번호 불일치", category="error")
             status_code = 403
-            return render_template('auth/index.html'), 403
 
-        if user is not None:
-            session['userid'] = user.id
+        elif user :
+
+            login_user(user=user)
+
             flash("성공적으로 로그인되었습니다.", category="success")
-            return redirect('/book')
+            return redirect(url_for('book.getAllBook'))
 
-    return render_template('auth/index.html'), status_code
+    return render_template('auth/index.html', form=form), status_code
 
 @bp.route('/logout')
 def logout():
 
-    if 'userid' in session.keys() and session['userid']:
-        session.clear()
+    logout_user()
 
-    return render_template('auth/index.html')
+    return redirect(url_for('auth.login'))

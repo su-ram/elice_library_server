@@ -1,20 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+    {% with messages = get_flashed_messages(category_filter=["alert"]) %}
     {% if messages %}
     <script type="text/javascript">UIkit.notification({message: '{{messages[0]}}', pos: 'top-center', status: 'success'})</script>
     {% endif %}
 {% endwith %}
     <div class="uk-grid-match uk-grid-small uk-child-width-1-4@m " uk-grid uk-height-match="target: > div > .uk-card" uk-grid>
-{% for book in books %}
+{% for book in books.items %}
 
     <div>
         <div class="uk-card uk-card-default uk-card-hover uk-card-small uk-card-body">
             <div class="uk-card-media-top">
-                <img class="uk-border-rounded" src="{{ book.image_path }}" uk-img >
+                <a href="{{ book.id }}"><img class="uk-border-rounded" src="{{ book.image_path }}" uk-img ></a>
             </div>
             <a class="uk-link-text" href="{{ book.id }}">{{ book.book_name }}</a>
-            <div class="uk-card-badge uk-label"> 평점 {{ book.rating }}</div>
+            <div class="uk-card-badge">
+                <input readonly class="rating rating-loading" data-size="sm" data-min="0" data-max="5" data-step="1" value="{{ book.rating }}">
+</div>
             <p style="alignment: right">{{ book.quantity }}권 남음</p>
 
         </div>
@@ -26,4 +28,24 @@
 
 {% endfor%}
 </div>
+    <div class="uk-margin">
+        <ul class="uk-pagination uk-flex-center" uk-margin>
+
+            {% if books.has_prev %}
+            <li><a href="{{url_for('book.getAllBook', page = books.prev_num)}}"><span uk-pagination-previous></span></a></li>
+            {% endif %}
+
+            {% for page in books.iter_pages() %}
+                {% if page == books.page %}
+                    <li class="uk-active" ><a href="/book?page={{ page }}">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="/book?page={{ page }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if books.has_next %}
+                <li><a href="{{url_for('book.getAllBook', page = books.next_num)}}"><span uk-pagination-next></span></a></li>
+            {% endif %}
+        </ul>
+    </div>
 {% endblock %}

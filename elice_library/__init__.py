@@ -1,9 +1,11 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 migrate = Migrate(compare_type=True)
+login_manager = LoginManager()
 
 def create_app():
 
@@ -11,6 +13,14 @@ def create_app():
     app.config.from_pyfile('../config.py')
     db.init_app(app)
     migrate.init_app(app, db)
+    login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+
+    from .models import User
+    @login_manager.user_loader
+    def user_loader(id):
+        user = User.query.filter(User.id == id).first()
+        return user
 
     from . import auth, book, rental
 
@@ -19,7 +29,11 @@ def create_app():
     app.register_blueprint(rental.bp)
 
     @app.route('/')
-    def hello_world():
-        return render_template('auth/index.html')
+    def home():
+
+        from .forms import LoginForm
+        form = LoginForm()
+
+        return render_template('auth/index.html', form=form)
 
     return app
